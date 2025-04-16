@@ -68,6 +68,43 @@ jobs:
   # Finally, update summary for snyk-check        #
   # Update needs statement to include snyk-checks #
   #################################################
+
+  snyk-checks:
+    runs-on: ubuntu-latest
+    outputs:
+      status: ${{ steps.set-status.outputs.status }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install Snyk CLI
+        run: npm install -g snyk
+
+      - name: Snyk Test for Open Source Vulns
+        run: snyk test --severity-threshold=high
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      - name: Snyk Code Scan
+        run: snyk code test
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      - name: Snyk IaC Scan
+        run: snyk iac test --severity-threshold=high
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      - name: Set job status
+        id: set-status
+        run: echo "status=success" >> $GITHUB_OUTPUT
+
+  
   summary:
     needs: [terraform-checks] # add snyk-checks 
     runs-on: ubuntu-latest
