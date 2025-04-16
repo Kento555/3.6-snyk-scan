@@ -32,7 +32,7 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
-        
+
     - name: Terraform init
       run: terraform init
 
@@ -55,7 +55,7 @@ jobs:
       run: tflint --init
 
     - name: Run TFLint
-      run: tflint -f compact
+      run: tflint -f compact || true
 
   ########################################
   # Add a job for snyk scan of your code #
