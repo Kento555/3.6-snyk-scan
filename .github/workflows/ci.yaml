@@ -82,7 +82,7 @@ jobs:
   snyk-checks:
     runs-on: ubuntu-latest
     outputs:
-      status: ${{ steps.set-status.outputs.status }}
+      status: ${{ job.status }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
